@@ -1,0 +1,6 @@
+<resources>
+
+    <dimen name="small_spacing">5dp</dimen>
+    <dimen name="img">50dp</dimen>
+
+</resources>
