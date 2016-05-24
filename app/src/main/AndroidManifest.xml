@@ -6,8 +6,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!--XML配置Appkey-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
 
-    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -27,6 +31,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.PlayerActivity"/>
+        <activity android:name=".activity.DrawingBoardActivity"/>
+        <activity android:name=".activity.CirclularSpreadActivity"/>
+        <meta-data android:value="5741b070e0f55adab0001b20" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="xiaomiApplationStore" android:name="UMENG_CHANNEL"/>
+
     </application>
 
 </manifest>

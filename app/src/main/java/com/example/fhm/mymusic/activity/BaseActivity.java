@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fhm.mymusic.R;
 import com.umeng.analytics.MobclickAgent;
 
 /**

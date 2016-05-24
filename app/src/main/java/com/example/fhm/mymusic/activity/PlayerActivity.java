@@ -1,9 +1,13 @@
 package com.example.fhm.mymusic.activity;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,69 +35,70 @@ import java.util.TimerTask;
 /**
  * Created by fhm on 2016/5/7.
  */
-    public class PlayerActivity extends BaseActivity {
-        @ViewInject(R.id.imgPrevious)
-        ImageView imgPrevious;
+public class PlayerActivity extends BaseActivity {
 
-         @ViewInject(R.id.imgPlay)
-         ImageView imgPlay;
+    @ViewInject(R.id.imgPrevious)
+    ImageView imgPrevious;
 
-         @ViewInject(R.id.imgNext)
-         ImageView imgNext;
+    @ViewInject(R.id.imgPlay)
+    ImageView imgPlay;
 
-         @ViewInject(R.id.img)
-         ImageView img;
+    @ViewInject(R.id.imgNext)
+    ImageView imgNext;
 
-        @ViewInject(R.id.tvSong)
-        TextView tvSong;
+    @ViewInject(R.id.img)
+    ImageView img;
 
-        @ViewInject(R.id.tvSinger)
-        TextView tvSinger;
+    @ViewInject(R.id.tvSong)
+    TextView tvSong;
 
-        @ViewInject(R.id.tvTime)
-        TextView tvTime;
+    @ViewInject(R.id.tvSinger)
+    TextView tvSinger;
 
-        @ViewInject(R.id.tvDuration)
-        TextView tvDuration;
+    @ViewInject(R.id.tvTime)
+    TextView tvTime;
 
-        @ViewInject(R.id.seekBar)
-        SeekBar seekBar;
-        @ViewInject(R.id.imgChange)
-        ImageView imgChange;
+    @ViewInject(R.id.tvDuration)
+    TextView tvDuration;
 
-        MediaPlayer mediaPlayer;
-        Songlist songlist;
-        BitmapUtils bitmapUtils;
-        Timer timer;
-        boolean random=false;
+    @ViewInject(R.id.seekBar)
+    SeekBar seekBar;
+    @ViewInject(R.id.imgChange)
+    ImageView imgChange;
 
-   /* @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i("Test","onStart");
-    }
+    MediaPlayer mediaPlayer;
+    Songlist songlist;
+    BitmapUtils bitmapUtils;
+    Timer timer;
+    boolean random = false;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("Test", "onResume");
+    /* @Override
+     protected void onStart() {
+         super.onStart();
+         Log.i("Test","onStart");
+     }
 
-    }
+     @Override
+     protected void onResume() {
+         super.onResume();
+         Log.i("Test", "onResume");
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i("Test", "onPause");
+     }
 
-    }
+     @Override
+     protected void onPause() {
+         super.onPause();
+         Log.i("Test", "onPause");
 
-    @Override
-    protected void onStop() {
-        Log.i("Test", "onStop");
+     }
 
-        super.onStop();
-    }
-*/
+     @Override
+     protected void onStop() {
+         Log.i("Test", "onStop");
+
+         super.onStop();
+     }
+ */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("Test", "onCreate");
@@ -104,6 +109,9 @@ import java.util.TimerTask;
         ViewUtils.inject(this);
         if (readIntData("random") == 1) {
             random = true;
+        }
+        if(MainActivity.list.size()==0){
+            return;
         }
         songlist = MainActivity.list.get(MainActivity.index);
         mediaPlayer = new MediaPlayer();
@@ -152,15 +160,18 @@ import java.util.TimerTask;
         });
         playMusic(MainActivity.index);
     }
-//    更新数据
+
+    //    更新数据
     private void updateData() {
         tvSong.setText(songlist.getSongname());
         tvSinger.setText(songlist.getSingername());
+//        tvDownUrl.setText(songlist.getDownUrl());
         bitmapUtils.display(img, songlist.getAlbumpic_big());
 //        tvDuration.setText(songlist.getSeconds() / 60 + ":" + songlist.getSeconds() % 60 + "");
         tvDuration.setText(T.convertTimeFormat(mediaPlayer.getDuration()));
     }
-//     播放音乐
+
+    //     播放音乐
     private void playMusic(int pos) {
         songlist = MainActivity.list.get(pos);
         updateData();
@@ -172,6 +183,13 @@ import java.util.TimerTask;
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @OnClick(R.id.img)
+    private void img(View v) {
+        Intent i = new Intent(PlayerActivity.this,DrawingBoardActivity.class);
+        startActivity(i);
     }
 //    切换随机、顺序播放
     @OnClick(R.id.imgChange)

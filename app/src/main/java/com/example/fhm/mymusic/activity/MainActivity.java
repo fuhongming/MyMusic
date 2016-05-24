@@ -2,6 +2,7 @@ package com.example.fhm.mymusic.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.fhm.mymusic.R;
 import com.example.fhm.mymusic.adapter.PlayListAdapter;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
+    boolean isSelect=false;
     boolean isLoc = true;
     public static List<Songlist> list = new ArrayList<>();
     public List<Songlist> listLoc = new ArrayList<>();
@@ -53,6 +56,7 @@ public class MainActivity extends Activity {
     @ViewInject(R.id.rl)
     RelativeLayout rl;
     PlayListAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +104,20 @@ public class MainActivity extends Activity {
     public void OnItemClick(AdapterView<?> parent, View view, int position, long id) {
         index = position;
 //        Log.i(TAG, "OnItemClick: " + "position" + position + ", " + id);
-        Intent i = new Intent(MainActivity.this, PlayerActivity.class);
+       /* if(list.size()==0){
+            return;
+        }*/
+        if(isSelect){
+            view.setBackgroundColor(Color.TRANSPARENT);
+        }else {
+            view.setBackgroundColor(Color.YELLOW);
+        }
         if (isLoc) {
             list = listLoc;
         } else {
             list = listNet;
         }
+        Intent i = new Intent(MainActivity.this, PlayerActivity.class);
         startActivity(i);
         overridePendingTransition(R.anim.in, R.anim.out);
 
@@ -114,7 +126,9 @@ public class MainActivity extends Activity {
     @OnClick(R.id.btnLoc)
     public void btnLoc(View v) {
         getLocData();
-        v.animate().rotationXBy(360).setDuration(1000).start();
+        btnLoc.setBackgroundColor(Color.BLUE);
+        btnNet.setBackgroundColor(Color.TRANSPARENT);
+//        v.animate().rotationXBy(360).setDuration(500).start();
     }
 
     /**
@@ -122,20 +136,20 @@ public class MainActivity extends Activity {
      * @param path 音乐文件路径
      */
     public void getFile(String path){
-        File f = new File(path);
-        File[] fs = f.listFiles();
-        if (fs != null) {
-            for (int i = 0; i < fs.length; i++) {
-                File ff = fs[i];
-                if (ff.isDirectory()) {
-                    getFile(ff.getAbsolutePath());
-                } else if (ff.isFile()) {
-                    if (ff.getName().endsWith(".mp3")) {
-                        Songlist songlist = new Songlist();
-                        songlist.setSongname(ff.getName());
-                        songlist.setUrl(ff.getAbsolutePath());
-                        listLoc.add(songlist);
-                    }
+                    File f = new File(path);
+                    File[] fs = f.listFiles();
+                    if (fs != null) {
+                        for (int i = 0; i < fs.length; i++) {
+                            File ff = fs[i];
+                            if (ff.isDirectory()) {
+                                getFile(ff.getAbsolutePath());
+                            } else if (ff.isFile()) {
+                                if (ff.getName().endsWith(".mp3")) {
+                                    Songlist songlist = new Songlist();
+                                    songlist.setSongname(ff.getName());
+                                    songlist.setUrl(ff.getAbsolutePath());
+                                    listLoc.add(songlist);
+                                }
                 }
             }
         }
@@ -149,7 +163,10 @@ public class MainActivity extends Activity {
     public void btnNet(View v) {
         isLoc = false;
         rl.setVisibility(View.INVISIBLE);
-        v.animate().rotationYBy(360).setDuration(1000).start();
+        btnLoc.setBackgroundColor(Color.TRANSPARENT);
+        btnNet.setBackgroundColor(Color.BLUE);
+
+//        v.animate().rotationYBy(360).setDuration(500).start();
         getDataTask("https://route.showapi.com/213-4?showapi_appid=18616&topid=5&showapi_sign=BD3D1296015795C7C6E6084D59B45385");
     }
 
@@ -167,8 +184,9 @@ public class MainActivity extends Activity {
                 if(root==null){
                     return;
                 }
-                listNet.clear();
+//                listNet.clear();
                 listNet = root.getShowapi_res_body().getPagebean().getSonglist();
+
 //                for (int i = 0; i < list.size(); i++) {
 //                   Log.i(TAG, list.get(i).toString());
 //                }
